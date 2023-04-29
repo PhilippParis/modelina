@@ -50,3 +50,12 @@ exports[`JAVA_JACKSON_PRESET should render Jackson annotations for enum 1`] = `
   }
 }"
 `;
+
+exports[`JAVA_JACKSON_PRESET should render Jackson annotations for union 1`] = `
+"@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = \\"petType\\")
+      @JsonSubTypes({
+        @JsonSubTypes.Type(value = Cat.class, name = \\"Cat\\"),
+@JsonSubTypes.Type(value = Dog.class, name = \\"Dog\\")
+      )}
+public interface Pet {}"
+`;

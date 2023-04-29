@@ -42,4 +42,57 @@ describe('JAVA_JACKSON_PRESET', () => {
     expect(models[0].result).toMatchSnapshot();
     expect(models[0].dependencies).toEqual(expectedDependencies);
   });
+
+  
+  test('should render Jackson annotations for union', async () => {
+    const doc = {
+      asyncapi: '2.6.0',
+      info: {
+        title: 'Pet',
+        version: '1.0.0'
+      },
+      channels: {},
+      components: {
+        messages: {
+          PetMessage: {
+            payload: { $ref: '#/components/schemas/Pet' }
+          }
+        },
+        schemas: {
+          Pet: {
+            discriminator: 'petType',
+            oneOf: [
+              { $ref: '#/components/schemas/Cat' },
+              { $ref: '#/components/schemas/Dog' }
+            ]
+          },
+          Cat: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              lives: {
+                type: 'integer'
+              }
+            }
+          },
+          Dog: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              packSize: {
+                type: 'integer'
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const expectedDependencies = ['import com.fasterxml.jackson.annotation.*;'];
+
+    const models = await generator.generate(doc);
+    expect(models).toHaveLength(3);
+    expect(models[0].result).toMatchSnapshot();
+    expect(models[0].dependencies).toEqual(expectedDependencies);
+  });
 });

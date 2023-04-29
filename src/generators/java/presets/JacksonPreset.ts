@@ -47,5 +47,18 @@ ${content}`;
       return `@JsonCreator
 ${content}`;
     }
+  },
+  union: {
+    self({ renderer, content, model }) {
+      renderer.dependencyManager.addDependency(
+        'import com.fasterxml.jackson.annotation.*;'
+      );
+      const subtypes = model.union.map(m => `@JsonSubTypes.Type(value = ${m.name}.class, name = "${m.name}")`).join(",\n");
+      return `@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "${model.originalInput.discriminator}")
+      @JsonSubTypes({
+        ${subtypes}
+      )}
+${content}`;
+    }
   }
 };
