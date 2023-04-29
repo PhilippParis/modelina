@@ -433,6 +433,9 @@ export function convertToObjectModel(
     );
     metaModel.properties[String(propertyName)] = propertyModel;
   }
+  if (jsonSchemaModel.parent) {
+    metaModel.parent = convertToMetaModel(jsonSchemaModel.parent, alreadySeenModels);
+  }
   return metaModel;
 }
 

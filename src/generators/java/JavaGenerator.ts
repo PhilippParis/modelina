@@ -7,6 +7,7 @@ import {
   ConstrainedEnumModel,
   ConstrainedMetaModel,
   ConstrainedObjectModel,
+  ConstrainedUnionModel,
   InputMetaModel,
   MetaModel,
   RenderOutput
@@ -24,6 +25,7 @@ import {
 } from './JavaConstrainer';
 import { DeepPartial, mergePartialAndDefault } from '../../utils/Partials';
 import { JavaDependencyManager } from './JavaDependencyManager';
+import { UnionRenderer } from './renderers/UnionRenderer';
 
 export interface JavaOptions extends CommonGeneratorOptions<JavaPreset> {
   collectionType: 'List' | 'Array';
@@ -128,6 +130,8 @@ export class JavaGenerator extends AbstractGenerator<
       return this.renderClass(model, inputModel, optionsToUse);
     } else if (model instanceof ConstrainedEnumModel) {
       return this.renderEnum(model, inputModel, optionsToUse);
+    } else if (model instanceof ConstrainedUnionModel) {
+      return this.renderUnion(model, inputModel, optionsToUse);
     }
     Logger.warn(
       `Java generator, cannot generate this type of model, ${model.name}`
@@ -253,4 +257,17 @@ ${outputModel.result}`;
       dependencies: dependencyManagerToUse.dependencies
     });
   }
+
+  async renderUnion(model: ConstrainedUnionModel, inputModel: InputMetaModel, options?: DeepPartial<JavaOptions>): Promise<RenderOutput> {
+    const optionsToUse = JavaGenerator.getJavaOptions({
+      ...this.options,
+      ...options
+    });
+    const presets = this.getPresets('union');
+    const dependencyManagerToUse = this.getDependencyManager(optionsToUse);
+    const renderer = new UnionRenderer(this.options, this, presets, model, inputModel, dependencyManagerToUse);
+    const result = await renderer.runSelfPreset();
+    return RenderOutput.toRenderOutput({ result, renderedName: model.name, dependencies: dependencyManagerToUse.dependencies });
+  }
+
 }

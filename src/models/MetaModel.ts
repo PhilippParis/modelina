@@ -35,7 +35,8 @@ export class ObjectModel extends MetaModel {
   constructor(
     name: string,
     originalInput: any,
-    public properties: { [key: string]: ObjectPropertyModel }
+    public properties: { [key: string]: ObjectPropertyModel },
+    public parent?: MetaModel
   ) {
     super(name, originalInput);
   }

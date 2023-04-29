@@ -411,6 +411,14 @@ function constrainObjectModel<
     constrainedModel.properties[String(constrainedPropertyName)] =
       constrainedPropertyModel;
   }
+  if (context.metaModel.parent) {
+    constrainedModel.parent = constrainMetaModel(
+      typeMapping,
+      constrainRules,
+      { ...context, metaModel: context.metaModel.parent, partOfProperty: undefined },
+      alreadySeenModels
+    );
+  }
   constrainedModel.type = getTypeFromMapping(typeMapping, {
     constrainedModel,
     options: context.options,

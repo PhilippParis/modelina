@@ -16,6 +16,7 @@ export class CommonModel {
   required?: string[];
   additionalItems?: CommonModel;
   union?: CommonModel[];
+  parent?: CommonModel;
 
   /**
    * Takes a deep copy of the input object and converts it to an instance of CommonModel.
@@ -239,6 +240,7 @@ export class CommonModel {
     } else {
       this.union = [unionModel];
     }
+    unionModel.parent = this;
   }
 
   /**

@@ -171,7 +171,8 @@ export class ConstrainedObjectModel extends ConstrainedMetaModel {
     name: string,
     originalInput: any,
     type: string,
-    public properties: { [key: string]: ConstrainedObjectPropertyModel }
+    public properties: { [key: string]: ConstrainedObjectPropertyModel },
+    public parent?: ConstrainedMetaModel
   ) {
     super(name, originalInput, type);
   }

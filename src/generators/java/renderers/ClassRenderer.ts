@@ -29,7 +29,7 @@ export class ClassRenderer extends JavaRenderer<ConstrainedObjectModel> {
       this.dependencyManager.addDependency('import java.util.Map;');
     }
 
-    return `public class ${this.model.name} {
+    return `public class ${this.model.name}${this.model.parent? ` implements ${this.model.parent.name}` : ``} {
 ${this.indent(this.renderBlock(content, 2))}
 }`;
   }

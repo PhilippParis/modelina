@@ -1,4 +1,5 @@
 import { JavaGenerator } from '../../../src/generators';
+import { Interpreter } from '../../../src/interpreter/Interpreter';
 
 describe('JavaGenerator', () => {
   let generator: JavaGenerator;
@@ -274,5 +275,53 @@ describe('JavaGenerator', () => {
     await expect(generator.generateCompleteModels(doc, config)).rejects.toEqual(
       expectedError
     );
+  });
+  test('should render polymorphism with oneOf keyword', async () => {
+    const doc = {
+      asyncapi: '2.6.0',
+      info: {
+        title: 'Pet',
+        version: '1.0.0'
+      },
+      channels: {},
+      components: {
+        messages: {
+          PetMessage: {
+            payload: { $ref: '#/components/schemas/Pet' }
+          }
+        },
+        schemas: {
+          Pet: {
+            discriminator: 'petType',
+            oneOf: [
+              { $ref: '#/components/schemas/Cat' },
+              { $ref: '#/components/schemas/Dog' }
+            ]
+          },
+          Cat: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              lives: {
+                type: 'integer'
+              }
+            }
+          },
+          Dog: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              packSize: {
+                type: 'integer'
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const models = await generator.generate(doc);
+    expect(models).toHaveLength(3);
+    expect(models.map((model) => model.result)).toMatchSnapshot();
   });
 });

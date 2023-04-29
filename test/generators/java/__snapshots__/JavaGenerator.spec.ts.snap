@@ -270,6 +270,24 @@ public class OtherModel {
 }"
 `;
 
+exports[`JavaGenerator should render polymorphism with oneOf keyword 1`] = `
+Array [
+  "public interface Pet {}",
+  "public class Cat implements Pet {
+  private Integer lives;
+
+  public Integer getLives() { return this.lives; }
+  public void setLives(Integer lives) { this.lives = lives; }
+}",
+  "public class Dog implements Pet {
+  private Integer packSize;
+
+  public Integer getPackSize() { return this.packSize; }
+  public void setPackSize(Integer packSize) { this.packSize = packSize; }
+}",
+]
+`;
+
 exports[`JavaGenerator should work custom preset for \`class\` type 1`] = `
 "public class CustomClass {
   @JsonProperty(\\"property\\")
